@@ -1,0 +1,52 @@
+# encoding: utf-8
+# 2022 R2
+SetScriptVersion(Version="22.2.192")
+template1 = GetTemplate(
+    TemplateName="Static Structural",
+    Solver="ANSYS")
+system1 = template1.CreateSystem()
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+material1 = engineeringData1.GetMaterial(Name="Structural Steel")
+material1.Delete()
+matl1 = engineeringData1.CreateMaterial(Name="Thermoplastic Polyurethane")
+matlProp1 = matl1.CreateProperty(
+    Name="Density",
+    Qualifiers={"Definition": "", "Behavior": ""})
+matlProp2 = matl1.CreateProperty(
+    Name="Elasticity",
+    Behavior="Isotropic",
+    Qualifiers={"Definition": "", "Behavior": "Isotropic"})
+matlProp1.SetVariableProperty(
+    VariableName="Density",
+    Property="Unit",
+    Value="g cm^-3")
+matlProp1.SetData(
+    Index=-1,
+    Variables=["Density"],
+    Values=[["1.47 [g cm^-3]"]])
+matlProp2.SetVariableProperty(
+    VariableName="Young's Modulus",
+    Property="Unit",
+    Value="GPa")
+matlProp2.SetData(
+    Index=-1,
+    Variables=["Poisson's Ratio"],
+    Values=[["0.3897"]])
+matlProp2.SetData(
+    Variables=["Young's Modulus"],
+    Values=[["3.06 [GPa]"]])
+Save(Overwrite=True)
+matl1.SetColor(
+    Red=103,
+    Green=192,
+    Blue=205)
+geometry1 = system1.GetContainer(ComponentName="Geometry")
+geometry1.SetFile(FilePath="D:/Sneha/IIT/Dextrity_Challenge/Part1.IGS")
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+Save(Overwrite=True)
+model1.Exit()
+model1.Edit()
+Save(Overwrite=True)
